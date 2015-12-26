@@ -18,7 +18,7 @@ logger.addHandler(fh)
 
 template_file = "template.j2"
 json_parameter_file = "/home/nandan.adhikari/file.json"
-output_directory = "/home/nandan.adhikari/includes"
+output_directory = "/home/nandan.adhikari/includes/"
 
 #Reading the JSON file
 try:
@@ -27,6 +27,7 @@ except Exception,e:
 	logger.info(e)
 	print e
 	sys.exit(2)
+
 #Reading Template file
 env = jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath="/home/nandan.adhikari/"),
                          trim_blocks=True,
@@ -37,14 +38,22 @@ except Exception,e:
 	logger.info(e)
 	print e
 	sys.exit(2)
+
 #Check for Nginx include directory
 if not os.path.exists(output_directory):
     os.mkdir(output_directory)
 
 for team in config_parameters:
 	result = template.render(key=team,bucket=config_parameters[team])
-	f = open(os.path.join(output_directory, config_parameters[team] + "_nginx.conf"), "w")
-	f.write(result)
-	f.close()
-	logger.info('Configuration file %s created.' %(config_parameters[team] + "_nginx.conf"))
+	fname = output_directory + config_parameters[team]  + "_nginx.conf"
+	if os.path.isfile(fname):
+	  print "Error: config file exists -", fname
+	  logger.info('Error: File exists - %s' %fname)
+	  sys.exit(2)
+	else:
+	  f = open(fname, "w")
+	  f.write(result)
+	  f.close()
+	  print "Configs created -", fname
+	  logger.info('Configuration file %s created.' %fname)
 
