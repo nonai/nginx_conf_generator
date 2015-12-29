@@ -4,7 +4,6 @@
 import jinja2
 import json
 import os
-import argparse
 import logging
 import sys
 
@@ -25,17 +24,19 @@ try:
 	config_parameters = json.load(open(json_parameter_file))
 except Exception,e:
 	logger.info(e)
+	print "Error in loading JSON file"
 	print e
 	sys.exit(2)
 
 #Reading Template file
-env = jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath="/etc/nginx/templates/"),
+env = jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath="/etc/nginx/templates"),
                          trim_blocks=True,
                          lstrip_blocks=True)
 try:
 	template = env.get_template(template_file)
 except Exception,e:
 	logger.info(e)
+	print "Error in get_template"
 	print e
 	sys.exit(2)
 
@@ -49,7 +50,8 @@ for team in config_parameters:
 	if os.path.isfile(fname):
 	  print "Error: config file exists -", fname
 	  logger.info('Error: File exists - %s' %fname)
-	  sys.exit(2)
+	  #sys.exit(2)
+	  continue
 	else:
 	  f = open(fname, "w")
 	  f.write(result)
