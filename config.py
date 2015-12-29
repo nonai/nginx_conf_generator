@@ -17,8 +17,8 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 template_file = "template.j2"
-json_parameter_file = "/home/nandan.adhikari/file.json"
-output_directory = "/home/nandan.adhikari/includes/"
+json_parameter_file = "/etc/nginx/config-generator/team.json"
+output_directory = "/etc/nginx/includes/"
 
 #Reading the JSON file
 try:
@@ -29,7 +29,7 @@ except Exception,e:
 	sys.exit(2)
 
 #Reading Template file
-env = jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath="/home/nandan.adhikari/"),
+env = jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath="/etc/nginx/templates/"),
                          trim_blocks=True,
                          lstrip_blocks=True)
 try:
